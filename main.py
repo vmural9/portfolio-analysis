@@ -1,13 +1,15 @@
 # main.py
 from data_fetching import fetch_stock_data
 from data_processing import process_stock_data
-from calculations import calculate_portfolio_metrics, monte_carlo_simulation, calculate_portfolio_returns
+from calculations import calculate_portfolio_metrics, monte_carlo_simulation, calculate_portfolio_returns, minimize_variance
 from visualization import (
     plot_portfolio_performance,
     plot_efficient_frontier,
     plot_individual_assets,
     plot_monte_carlo_results,
-    plot_return_distribution
+    plot_return_distribution,
+    plot_monte_carlo_results,
+    plot_efficient_frontier_with_optimal
 )
 
 def main():
@@ -30,10 +32,37 @@ def main():
     for key, value in metrics.items():
         print(f"{key}: {value}")
 
+    # Use the current portfolio's return as a baseline for target return
+    current_return = metrics['Expected Return']
+    target_return = current_return * 0.9  # Try for 90% of current return
+    allow_short = False
+
+    # Flag to track optimization success
+    optimization_succeeded = False
+    
+    try:
+        optimal_weights, opt_return, opt_volatility = minimize_variance(
+            processed_data, target_return, allow_short
+        )
+        print("\nOptimal Portfolio Weights:")
+        for ticker, weight in zip(portfolio.keys(), optimal_weights):
+            print(f"{ticker}: {weight:.4f}")
+        print(f"Optimal Portfolio Return: {opt_return:.4f}")
+        print(f"Optimal Portfolio Volatility: {opt_volatility:.4f}")
+        optimization_succeeded = True
+    except Exception as e:
+        print(f"Optimization failed: {e}")
+
     # Visualizations
     plot_portfolio_performance(portfolio_returns)
     plot_individual_assets(processed_data)
     plot_efficient_frontier(processed_data)
+    
+    if optimization_succeeded:
+        plot_efficient_frontier_with_optimal(
+            processed_data, optimal_weights, opt_return, opt_volatility, allow_short
+        )
+    
     plot_return_distribution(portfolio_returns)
 
     # Monte Carlo Simulation

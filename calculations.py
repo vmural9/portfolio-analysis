@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 from data_fetching import fetch_stock_data
+from scipy.optimize import minimize
 
 def calculate_portfolio_returns(processed_data, portfolio_weights):
     weights = pd.Series(portfolio_weights)
@@ -71,3 +72,54 @@ def calculate_portfolio_metrics(processed_data, portfolio_weights):
     metrics['VaR'] = calculate_var(portfolio_returns)
     
     return metrics
+
+def minimize_variance(processed_data, target_return, allow_short=False):
+    # Create empty DataFrame first
+    price_data = pd.DataFrame()
+    
+    # Add columns one by one
+    for ticker, data in processed_data.items():
+        price_data[ticker] = data['Adj Close']
+        
+    daily_returns = price_data.pct_change().dropna()
+    mean_returns = daily_returns.mean().values * 252  # Annualized returns
+    cov_matrix = daily_returns.cov().values * 252     # Annualized covariance
+    
+    num_assets = len(mean_returns)
+    args = (cov_matrix,)
+
+    # Initial guess as numpy array
+    init_guess = np.array([1. / num_assets] * num_assets)
+
+    # Constraints with ravel() to ensure 1D
+    constraints = (
+        {'type': 'eq', 'fun': lambda weights: np.sum(weights) - 1},
+        {'type': 'eq', 'fun': lambda weights: np.dot(weights, mean_returns.ravel()) - target_return}
+    )
+
+    # Bounds
+    if allow_short:
+        bounds = [(-1.0, 1.0) for _ in range(num_assets)]
+    else:
+        bounds = [(0.0, 1.0) for _ in range(num_assets)]
+
+    # Objective function to minimize (portfolio variance)
+    def portfolio_variance(weights, cov_matrix):
+        return np.dot(weights.T, np.dot(cov_matrix, weights))
+
+    # Optimize
+    result = minimize(portfolio_variance, init_guess, args=args,
+                      method='SLSQP', bounds=bounds, constraints=constraints)
+
+    if not result.success:
+        raise Exception("Optimization failed: " + result.message)
+
+    # Get the optimal weights
+    optimal_weights = result.x
+
+    # Calculate optimal portfolio metrics
+    portfolio_return = np.dot(optimal_weights, mean_returns)
+    portfolio_volatility = np.sqrt(np.dot(optimal_weights.T, np.dot(cov_matrix, optimal_weights)))
+
+    return optimal_weights, portfolio_return, portfolio_volatility
+

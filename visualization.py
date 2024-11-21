@@ -95,3 +95,59 @@ def plot_return_distribution(portfolio_returns):
     plt.ylabel('Frequency')
     plt.grid(True)
     plt.show()
+
+def plot_efficient_frontier_with_optimal(
+    processed_data, optimal_weights, opt_return, opt_volatility, allow_short=False, num_portfolios=5000
+):
+    # Create empty DataFrame first
+    price_data = pd.DataFrame()
+    
+    # Add columns one by one
+    for ticker, data in processed_data.items():
+        price_data[ticker] = data['Adj Close']
+        
+    daily_returns = price_data.pct_change().dropna()
+    mean_returns = daily_returns.mean() * 252
+    cov_matrix = daily_returns.cov() * 252
+    num_assets = len(mean_returns)
+
+    # Arrays to store simulation results
+    results = np.zeros((3, num_portfolios))
+    weights_record = []
+
+    for i in range(num_portfolios):
+        if allow_short:
+            weights = np.random.uniform(-1, 1, num_assets)
+        else:
+            weights = np.random.random(num_assets)
+        weights /= np.sum(np.abs(weights))  # Ensure sum of weights is 1
+
+        weights_record.append(weights)
+
+        portfolio_return = np.sum(mean_returns * weights)
+        portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))
+        sharpe_ratio = (portfolio_return - 0.01) / portfolio_volatility
+
+        results[0,i] = portfolio_return
+        results[1,i] = portfolio_volatility
+        results[2,i] = sharpe_ratio
+
+    # Convert results array to DataFrame
+    results_frame = pd.DataFrame(results.T, columns=['Return', 'Volatility', 'Sharpe Ratio'])
+
+    # Plot efficient frontier
+    plt.figure(figsize=(10, 7))
+    plt.scatter(results_frame['Volatility'], results_frame['Return'], c=results_frame['Sharpe Ratio'],
+                cmap='viridis', marker='o', s=10, alpha=0.3)
+    plt.colorbar(label='Sharpe Ratio')
+
+    # Plot optimal portfolio
+    plt.scatter(opt_volatility, opt_return, color='red', marker='*', s=500, label='Optimal Portfolio')
+
+    plt.xlabel('Volatility (Std. Deviation)')
+    plt.ylabel('Expected Return')
+    plt.title('Efficient Frontier with Optimal Portfolio')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
