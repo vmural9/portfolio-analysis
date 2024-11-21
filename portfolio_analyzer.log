@@ -1,0 +1,274 @@
+2024-11-21 16:20:58,423 - portfolio_analyzer - INFO - Starting portfolio analysis
+2024-11-21 16:20:58,424 - portfolio_analyzer - INFO - Analyzing portfolio: {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
+2024-11-21 16:20:58,424 - portfolio_analyzer - INFO - Time period: 2020-01-01 to 2023-10-01
+2024-11-21 16:20:58,424 - portfolio_analyzer - DEBUG - Fetching stock data...
+2024-11-21 16:21:02,032 - portfolio_analyzer - DEBUG - Processing stock data...
+2024-11-21 16:21:02,033 - portfolio_analyzer - DEBUG - Calculating portfolio metrics...
+2024-11-21 16:21:02,037 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:21:02,446 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:21:02,446 - portfolio_analyzer - INFO - Portfolio Metrics:
+2024-11-21 16:21:02,447 - portfolio_analyzer - INFO - Expected Return: 0.2574
+2024-11-21 16:21:02,447 - portfolio_analyzer - INFO - Volatility: 0.3102
+2024-11-21 16:21:02,448 - portfolio_analyzer - INFO - Sharpe Ratio: 0.7975
+2024-11-21 16:21:02,448 - portfolio_analyzer - INFO - Beta: 1.1686
+2024-11-21 16:21:02,448 - portfolio_analyzer - INFO - VaR: -0.0286
+2024-11-21 16:21:02,448 - portfolio_analyzer - DEBUG - Generating visualizations...
+2024-11-21 16:23:26,306 - portfolio_analyzer - ERROR - Error generating efficient frontier plot: Optimization failed: More equality constraints than independent variables
+2024-11-21 16:23:26,307 - portfolio_analyzer - ERROR - An error occurred during portfolio analysis: Optimization failed: More equality constraints than independent variables
+Traceback (most recent call last):
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\main.py", line 70, in main
+    plot_efficient_frontier(processed_data)
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\visualization.py", line 51, in plot_efficient_frontier
+    returns, volatilities, weights = generate_efficient_frontier(
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\calculations.py", line 289, in generate_efficient_frontier
+    efficient_portfolios = [
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\calculations.py", line 290, in <listcomp>
+    optimize_portfolio(processed_data, target_return=target, allow_short=allow_short, constraints=constraints)
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\calculations.py", line 270, in optimize_portfolio
+    raise ValueError(f"Optimization failed: {result.message}")
+ValueError: Optimization failed: More equality constraints than independent variables
+2024-11-21 16:26:13,207 - portfolio_analyzer - INFO - Starting portfolio analysis
+2024-11-21 16:26:13,207 - portfolio_analyzer - INFO - Analyzing portfolio: {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
+2024-11-21 16:26:13,207 - portfolio_analyzer - INFO - Time period: 2020-01-01 to 2023-10-01
+2024-11-21 16:26:13,208 - portfolio_analyzer - DEBUG - Fetching stock data...
+2024-11-21 16:26:14,282 - portfolio_analyzer - DEBUG - Processing stock data...
+2024-11-21 16:26:14,283 - portfolio_analyzer - DEBUG - Calculating portfolio metrics...
+2024-11-21 16:26:14,287 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:26:14,414 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:26:14,414 - portfolio_analyzer - INFO - Portfolio Metrics:
+2024-11-21 16:26:14,414 - portfolio_analyzer - INFO - Expected Return: 0.2574
+2024-11-21 16:26:14,415 - portfolio_analyzer - INFO - Volatility: 0.3102
+2024-11-21 16:26:14,415 - portfolio_analyzer - INFO - Sharpe Ratio: 0.7975
+2024-11-21 16:26:14,415 - portfolio_analyzer - INFO - Beta: 1.1686
+2024-11-21 16:26:14,415 - portfolio_analyzer - INFO - VaR: -0.0286
+2024-11-21 16:26:14,416 - portfolio_analyzer - DEBUG - Generating visualizations...
+2024-11-21 16:26:20,969 - portfolio_analyzer - ERROR - Error generating efficient frontier plot: If using all scalar values, you must pass an index
+2024-11-21 16:26:20,970 - portfolio_analyzer - ERROR - An error occurred during portfolio analysis: If using all scalar values, you must pass an index
+Traceback (most recent call last):
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\main.py", line 70, in main
+    plot_efficient_frontier(processed_data)
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\visualization.py", line 51, in plot_efficient_frontier
+    returns, volatilities, weights = generate_efficient_frontier(
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\calculations.py", line 285, in generate_efficient_frontier
+    price_data = pd.DataFrame({ticker: data['Adj Close'] for ticker, data in processed_data.items()})
+  File "C:\Users\karrt\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\core\frame.py", line 778, in __init__
+    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)
+  File "C:\Users\karrt\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\core\internals\construction.py", line 503, in dict_to_mgr
+    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)
+  File "C:\Users\karrt\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\core\internals\construction.py", line 114, in arrays_to_mgr
+    index = _extract_index(arrays)
+  File "C:\Users\karrt\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\core\internals\construction.py", line 667, in _extract_index
+    raise ValueError("If using all scalar values, you must pass an index")
+ValueError: If using all scalar values, you must pass an index
+2024-11-21 16:28:51,935 - portfolio_analyzer - INFO - Starting portfolio analysis
+2024-11-21 16:28:51,936 - portfolio_analyzer - INFO - Analyzing portfolio: {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
+2024-11-21 16:28:51,936 - portfolio_analyzer - INFO - Time period: 2020-01-01 to 2023-10-01
+2024-11-21 16:28:51,936 - portfolio_analyzer - DEBUG - Fetching stock data...
+2024-11-21 16:28:53,850 - portfolio_analyzer - DEBUG - Processing stock data...
+2024-11-21 16:28:53,851 - portfolio_analyzer - DEBUG - Calculating portfolio metrics...
+2024-11-21 16:28:53,854 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:28:54,251 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:28:54,252 - portfolio_analyzer - INFO - Portfolio Metrics:
+2024-11-21 16:28:54,252 - portfolio_analyzer - INFO - Expected Return: 0.2574
+2024-11-21 16:28:54,252 - portfolio_analyzer - INFO - Volatility: 0.3102
+2024-11-21 16:28:54,253 - portfolio_analyzer - INFO - Sharpe Ratio: 0.7975
+2024-11-21 16:28:54,253 - portfolio_analyzer - INFO - Beta: 1.1686
+2024-11-21 16:28:54,253 - portfolio_analyzer - INFO - VaR: -0.0286
+2024-11-21 16:28:54,253 - portfolio_analyzer - DEBUG - Generating visualizations...
+2024-11-21 16:28:59,888 - portfolio_analyzer - ERROR - Error generating efficient frontier plot: Optimization failed: More equality constraints than independent variables
+2024-11-21 16:28:59,889 - portfolio_analyzer - ERROR - An error occurred during portfolio analysis: Optimization failed: More equality constraints than independent variables
+Traceback (most recent call last):
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\main.py", line 70, in main
+    plot_efficient_frontier(processed_data)
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\visualization.py", line 51, in plot_efficient_frontier
+    returns, volatilities, weights = generate_efficient_frontier(
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\calculations.py", line 299, in generate_efficient_frontier
+    efficient_portfolios = [
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\calculations.py", line 300, in <listcomp>
+    optimize_portfolio(processed_data, target_return=target, allow_short=allow_short, constraints=constraints)
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\calculations.py", line 270, in optimize_portfolio
+    raise ValueError(f"Optimization failed: {result.message}")
+ValueError: Optimization failed: More equality constraints than independent variables
+2024-11-21 16:32:30,630 - portfolio_analyzer - INFO - Starting portfolio analysis
+2024-11-21 16:32:30,630 - portfolio_analyzer - INFO - Analyzing portfolio: {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
+2024-11-21 16:32:30,631 - portfolio_analyzer - INFO - Time period: 2020-01-01 to 2023-10-01
+2024-11-21 16:32:30,631 - portfolio_analyzer - DEBUG - Fetching stock data...
+2024-11-21 16:32:32,369 - portfolio_analyzer - DEBUG - Processing stock data...
+2024-11-21 16:32:32,370 - portfolio_analyzer - DEBUG - Calculating portfolio metrics...
+2024-11-21 16:32:32,374 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:32:32,532 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:32:32,533 - portfolio_analyzer - INFO - Portfolio Metrics:
+2024-11-21 16:32:32,533 - portfolio_analyzer - INFO - Expected Return: 0.2574
+2024-11-21 16:32:32,533 - portfolio_analyzer - INFO - Volatility: 0.3102
+2024-11-21 16:32:32,534 - portfolio_analyzer - INFO - Sharpe Ratio: 0.7975
+2024-11-21 16:32:32,534 - portfolio_analyzer - INFO - Beta: 1.1686
+2024-11-21 16:32:32,534 - portfolio_analyzer - INFO - VaR: -0.0286
+2024-11-21 16:32:32,535 - portfolio_analyzer - DEBUG - Generating visualizations...
+2024-11-21 16:32:44,745 - portfolio_analyzer - DEBUG - Efficient frontier plot generated successfully
+2024-11-21 16:32:49,111 - portfolio_analyzer - DEBUG - Running Monte Carlo simulation...
+2024-11-21 16:32:49,112 - portfolio_analyzer - INFO - Starting Monte Carlo simulation with 1000 simulations
+2024-11-21 16:32:49,116 - portfolio_analyzer - DEBUG - Completed 0 simulations
+2024-11-21 16:32:49,145 - portfolio_analyzer - DEBUG - Completed 200 simulations
+2024-11-21 16:32:49,168 - portfolio_analyzer - DEBUG - Completed 400 simulations
+2024-11-21 16:32:49,189 - portfolio_analyzer - DEBUG - Completed 600 simulations
+2024-11-21 16:32:49,211 - portfolio_analyzer - DEBUG - Completed 800 simulations
+2024-11-21 16:32:49,233 - portfolio_analyzer - INFO - Monte Carlo simulation completed successfully
+2024-11-21 16:32:54,748 - portfolio_analyzer - ERROR - An error occurred during portfolio analysis: name 'metrics' is not defined
+Traceback (most recent call last):
+  File "c:\Users\karrt\OneDrive\Documents\Code\portfolio-analysis\main.py", line 81, in main
+    exec(f.read(), {}, config)
+  File "<string>", line 6, in <module>
+NameError: name 'metrics' is not defined
+2024-11-21 16:36:09,997 - portfolio_analyzer - INFO - Starting portfolio analysis
+2024-11-21 16:36:09,997 - portfolio_analyzer - INFO - Analyzing portfolio: {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
+2024-11-21 16:36:09,998 - portfolio_analyzer - INFO - Time period: 2020-01-01 to 2023-10-01
+2024-11-21 16:36:09,998 - portfolio_analyzer - DEBUG - Fetching stock data...
+2024-11-21 16:36:12,004 - portfolio_analyzer - DEBUG - Processing stock data...
+2024-11-21 16:36:12,005 - portfolio_analyzer - DEBUG - Calculating portfolio metrics...
+2024-11-21 16:36:12,008 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:36:12,199 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:36:12,199 - portfolio_analyzer - INFO - Portfolio Metrics:
+2024-11-21 16:36:12,199 - portfolio_analyzer - INFO - Expected Return: 0.2574
+2024-11-21 16:36:12,199 - portfolio_analyzer - INFO - Volatility: 0.3102
+2024-11-21 16:36:12,200 - portfolio_analyzer - INFO - Sharpe Ratio: 0.7975
+2024-11-21 16:36:12,200 - portfolio_analyzer - INFO - Beta: 1.1686
+2024-11-21 16:36:12,200 - portfolio_analyzer - INFO - VaR: -0.0286
+2024-11-21 16:36:12,200 - portfolio_analyzer - DEBUG - Generating visualizations...
+2024-11-21 16:36:25,346 - portfolio_analyzer - DEBUG - Efficient frontier plot generated successfully
+2024-11-21 16:36:28,960 - portfolio_analyzer - DEBUG - Running Monte Carlo simulation...
+2024-11-21 16:36:28,960 - portfolio_analyzer - INFO - Starting Monte Carlo simulation with 1000 simulations
+2024-11-21 16:36:28,965 - portfolio_analyzer - DEBUG - Completed 0 simulations
+2024-11-21 16:36:28,989 - portfolio_analyzer - DEBUG - Completed 200 simulations
+2024-11-21 16:36:29,011 - portfolio_analyzer - DEBUG - Completed 400 simulations
+2024-11-21 16:36:29,033 - portfolio_analyzer - DEBUG - Completed 600 simulations
+2024-11-21 16:36:29,056 - portfolio_analyzer - DEBUG - Completed 800 simulations
+2024-11-21 16:36:29,078 - portfolio_analyzer - INFO - Monte Carlo simulation completed successfully
+2024-11-21 16:36:32,813 - portfolio_analyzer - INFO - Portfolio analysis completed successfully
+2024-11-21 16:40:17,390 - portfolio_analyzer - INFO - Starting portfolio analysis
+2024-11-21 16:40:17,390 - portfolio_analyzer - INFO - Analyzing portfolio: {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
+2024-11-21 16:40:17,391 - portfolio_analyzer - INFO - Time period: 2020-01-01 to 2023-10-01
+2024-11-21 16:40:17,391 - portfolio_analyzer - DEBUG - Fetching stock data...
+2024-11-21 16:40:18,442 - portfolio_analyzer - DEBUG - Processing stock data...
+2024-11-21 16:40:18,443 - portfolio_analyzer - DEBUG - Calculating portfolio metrics...
+2024-11-21 16:40:18,447 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:40:18,574 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:40:18,574 - portfolio_analyzer - INFO - Portfolio Metrics:
+2024-11-21 16:40:18,575 - portfolio_analyzer - INFO - Expected Return: 0.2574
+2024-11-21 16:40:18,575 - portfolio_analyzer - INFO - Volatility: 0.3102
+2024-11-21 16:40:18,575 - portfolio_analyzer - INFO - Sharpe Ratio: 0.7975
+2024-11-21 16:40:18,575 - portfolio_analyzer - INFO - Beta: 1.1686
+2024-11-21 16:40:18,576 - portfolio_analyzer - INFO - VaR: -0.0286
+2024-11-21 16:40:18,576 - portfolio_analyzer - DEBUG - Generating visualizations...
+2024-11-21 16:40:31,695 - portfolio_analyzer - DEBUG - Efficient frontier plot generated successfully
+2024-11-21 16:40:32,950 - portfolio_analyzer - DEBUG - Running Monte Carlo simulation...
+2024-11-21 16:40:32,950 - portfolio_analyzer - INFO - Starting Monte Carlo simulation with 1000 simulations
+2024-11-21 16:40:32,955 - portfolio_analyzer - DEBUG - Completed 0 simulations
+2024-11-21 16:40:32,978 - portfolio_analyzer - DEBUG - Completed 200 simulations
+2024-11-21 16:40:33,000 - portfolio_analyzer - DEBUG - Completed 400 simulations
+2024-11-21 16:40:33,022 - portfolio_analyzer - DEBUG - Completed 600 simulations
+2024-11-21 16:40:33,044 - portfolio_analyzer - DEBUG - Completed 800 simulations
+2024-11-21 16:40:33,066 - portfolio_analyzer - INFO - Monte Carlo simulation completed successfully
+2024-11-21 16:40:35,659 - portfolio_analyzer - INFO - 
+Optimal Portfolio Results:
+2024-11-21 16:40:35,659 - portfolio_analyzer - INFO - AAPL weight: 0.0000
+2024-11-21 16:40:35,660 - portfolio_analyzer - INFO - MSFT weight: 0.0715
+2024-11-21 16:40:35,660 - portfolio_analyzer - INFO - GOOGL weight: 0.9285
+2024-11-21 16:40:35,660 - portfolio_analyzer - INFO - Optimal Portfolio Return: 0.2317
+2024-11-21 16:40:35,661 - portfolio_analyzer - INFO - Optimal Portfolio Volatility: 0.3331
+2024-11-21 16:40:35,661 - portfolio_analyzer - INFO - Portfolio analysis completed successfully
+2024-11-21 16:42:29,819 - portfolio_analyzer - INFO - Starting portfolio analysis
+2024-11-21 16:42:29,819 - portfolio_analyzer - INFO - Analyzing portfolio: {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
+2024-11-21 16:42:29,819 - portfolio_analyzer - INFO - Time period: 2020-01-01 to 2023-10-01
+2024-11-21 16:42:29,819 - portfolio_analyzer - DEBUG - Fetching stock data...
+2024-11-21 16:42:30,848 - portfolio_analyzer - DEBUG - Processing stock data...
+2024-11-21 16:42:30,849 - portfolio_analyzer - DEBUG - Calculating portfolio metrics...
+2024-11-21 16:42:30,852 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:42:30,976 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:42:30,977 - portfolio_analyzer - INFO - Portfolio Metrics:
+2024-11-21 16:42:30,977 - portfolio_analyzer - INFO - Expected Return: 0.2574
+2024-11-21 16:42:30,977 - portfolio_analyzer - INFO - Volatility: 0.3102
+2024-11-21 16:42:30,978 - portfolio_analyzer - INFO - Sharpe Ratio: 0.7975
+2024-11-21 16:42:30,978 - portfolio_analyzer - INFO - Beta: 1.1686
+2024-11-21 16:42:30,978 - portfolio_analyzer - INFO - VaR: -0.0286
+2024-11-21 16:42:30,978 - portfolio_analyzer - DEBUG - Generating visualizations...
+2024-11-21 16:42:56,349 - portfolio_analyzer - DEBUG - Efficient frontier plot generated successfully
+2024-11-21 16:42:59,718 - portfolio_analyzer - DEBUG - Running Monte Carlo simulation...
+2024-11-21 16:42:59,719 - portfolio_analyzer - INFO - Starting Monte Carlo simulation with 1000 simulations
+2024-11-21 16:42:59,725 - portfolio_analyzer - DEBUG - Completed 0 simulations
+2024-11-21 16:42:59,749 - portfolio_analyzer - DEBUG - Completed 200 simulations
+2024-11-21 16:42:59,773 - portfolio_analyzer - DEBUG - Completed 400 simulations
+2024-11-21 16:42:59,795 - portfolio_analyzer - DEBUG - Completed 600 simulations
+2024-11-21 16:42:59,818 - portfolio_analyzer - DEBUG - Completed 800 simulations
+2024-11-21 16:42:59,840 - portfolio_analyzer - INFO - Monte Carlo simulation completed successfully
+2024-11-21 16:43:04,676 - portfolio_analyzer - INFO - 
+Optimal Portfolio Results:
+2024-11-21 16:43:04,676 - portfolio_analyzer - INFO - AAPL weight: 0.0000
+2024-11-21 16:43:04,677 - portfolio_analyzer - INFO - MSFT weight: 0.0715
+2024-11-21 16:43:04,677 - portfolio_analyzer - INFO - GOOGL weight: 0.9285
+2024-11-21 16:43:04,678 - portfolio_analyzer - INFO - Optimal Portfolio Return: 0.2317
+2024-11-21 16:43:04,678 - portfolio_analyzer - INFO - Optimal Portfolio Volatility: 0.3331
+2024-11-21 16:43:04,678 - portfolio_analyzer - INFO - Portfolio analysis completed successfully
+2024-11-21 16:44:28,825 - portfolio_analyzer - INFO - Starting portfolio analysis
+2024-11-21 16:44:28,826 - portfolio_analyzer - INFO - Analyzing portfolio: {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
+2024-11-21 16:44:28,826 - portfolio_analyzer - INFO - Time period: 2020-01-01 to 2023-10-01
+2024-11-21 16:44:28,826 - portfolio_analyzer - DEBUG - Fetching stock data...
+2024-11-21 16:44:29,677 - portfolio_analyzer - DEBUG - Processing stock data...
+2024-11-21 16:44:29,678 - portfolio_analyzer - DEBUG - Calculating portfolio metrics...
+2024-11-21 16:44:29,681 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:44:29,793 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:44:29,793 - portfolio_analyzer - INFO - Portfolio Metrics:
+2024-11-21 16:44:29,794 - portfolio_analyzer - INFO - Expected Return: 0.2574
+2024-11-21 16:44:29,794 - portfolio_analyzer - INFO - Volatility: 0.3102
+2024-11-21 16:44:29,795 - portfolio_analyzer - INFO - Sharpe Ratio: 0.7975
+2024-11-21 16:44:29,795 - portfolio_analyzer - INFO - Beta: 1.1686
+2024-11-21 16:44:29,795 - portfolio_analyzer - INFO - VaR: -0.0286
+2024-11-21 16:44:29,796 - portfolio_analyzer - DEBUG - Generating visualizations...
+2024-11-21 16:45:27,714 - portfolio_analyzer - DEBUG - Efficient frontier plot generated successfully
+2024-11-21 16:45:29,039 - portfolio_analyzer - DEBUG - Running Monte Carlo simulation...
+2024-11-21 16:45:29,039 - portfolio_analyzer - INFO - Starting Monte Carlo simulation with 1000 simulations
+2024-11-21 16:45:29,043 - portfolio_analyzer - DEBUG - Completed 0 simulations
+2024-11-21 16:45:29,066 - portfolio_analyzer - DEBUG - Completed 200 simulations
+2024-11-21 16:45:29,089 - portfolio_analyzer - DEBUG - Completed 400 simulations
+2024-11-21 16:45:29,112 - portfolio_analyzer - DEBUG - Completed 600 simulations
+2024-11-21 16:45:29,134 - portfolio_analyzer - DEBUG - Completed 800 simulations
+2024-11-21 16:45:29,157 - portfolio_analyzer - INFO - Monte Carlo simulation completed successfully
+2024-11-21 16:45:30,589 - portfolio_analyzer - INFO - 
+Optimal Portfolio Results:
+2024-11-21 16:45:30,589 - portfolio_analyzer - INFO - AAPL weight: 0.0000
+2024-11-21 16:45:30,590 - portfolio_analyzer - INFO - MSFT weight: 0.0715
+2024-11-21 16:45:30,590 - portfolio_analyzer - INFO - GOOGL weight: 0.9285
+2024-11-21 16:45:30,590 - portfolio_analyzer - INFO - Optimal Portfolio Return: 0.2317
+2024-11-21 16:45:30,590 - portfolio_analyzer - INFO - Optimal Portfolio Volatility: 0.3331
+2024-11-21 16:45:30,591 - portfolio_analyzer - INFO - Portfolio analysis completed successfully
+2024-11-21 16:46:15,547 - portfolio_analyzer - INFO - Starting portfolio analysis
+2024-11-21 16:46:15,547 - portfolio_analyzer - INFO - Analyzing portfolio: {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
+2024-11-21 16:46:15,548 - portfolio_analyzer - INFO - Time period: 2020-01-01 to 2023-10-01
+2024-11-21 16:46:15,548 - portfolio_analyzer - DEBUG - Fetching stock data...
+2024-11-21 16:46:16,761 - portfolio_analyzer - DEBUG - Processing stock data...
+2024-11-21 16:46:16,762 - portfolio_analyzer - DEBUG - Calculating portfolio metrics...
+2024-11-21 16:46:16,766 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:46:16,954 - portfolio_analyzer - DEBUG - Calculated portfolio returns with shape: (942,)
+2024-11-21 16:46:16,954 - portfolio_analyzer - INFO - Portfolio Metrics:
+2024-11-21 16:46:16,954 - portfolio_analyzer - INFO - Expected Return: 0.2574
+2024-11-21 16:46:16,955 - portfolio_analyzer - INFO - Volatility: 0.3102
+2024-11-21 16:46:16,955 - portfolio_analyzer - INFO - Sharpe Ratio: 0.7975
+2024-11-21 16:46:16,955 - portfolio_analyzer - INFO - Beta: 1.1686
+2024-11-21 16:46:16,956 - portfolio_analyzer - INFO - VaR: -0.0286
+2024-11-21 16:46:16,956 - portfolio_analyzer - DEBUG - Generating visualizations...
+2024-11-21 16:46:28,595 - portfolio_analyzer - DEBUG - Efficient frontier plot generated successfully
+2024-11-21 16:46:34,908 - portfolio_analyzer - DEBUG - Running Monte Carlo simulation...
+2024-11-21 16:46:34,909 - portfolio_analyzer - INFO - Starting Monte Carlo simulation with 1000 simulations
+2024-11-21 16:46:34,915 - portfolio_analyzer - DEBUG - Completed 0 simulations
+2024-11-21 16:46:34,939 - portfolio_analyzer - DEBUG - Completed 200 simulations
+2024-11-21 16:46:34,962 - portfolio_analyzer - DEBUG - Completed 400 simulations
+2024-11-21 16:46:34,985 - portfolio_analyzer - DEBUG - Completed 600 simulations
+2024-11-21 16:46:35,008 - portfolio_analyzer - DEBUG - Completed 800 simulations
+2024-11-21 16:46:35,031 - portfolio_analyzer - INFO - Monte Carlo simulation completed successfully
+2024-11-21 16:46:39,906 - portfolio_analyzer - INFO - 
+Optimal Portfolio Results:
+2024-11-21 16:46:39,907 - portfolio_analyzer - INFO - AAPL weight: 0.0000
+2024-11-21 16:46:39,907 - portfolio_analyzer - INFO - MSFT weight: 0.0715
+2024-11-21 16:46:39,908 - portfolio_analyzer - INFO - GOOGL weight: 0.9285
+2024-11-21 16:46:39,909 - portfolio_analyzer - INFO - Optimal Portfolio Return: 0.2317
+2024-11-21 16:46:39,909 - portfolio_analyzer - INFO - Optimal Portfolio Volatility: 0.3331
+2024-11-21 16:46:39,909 - portfolio_analyzer - INFO - Portfolio analysis completed successfully

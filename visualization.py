@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import logging
+from calculations import calculate_portfolio_stats, optimize_portfolio, generate_efficient_frontier
 
 """
 Module for creating portfolio analysis visualizations.
@@ -33,63 +34,56 @@ def plot_portfolio_performance(portfolio_returns):
     plt.grid(True)
     plt.show()
 
-def plot_efficient_frontier(processed_data, num_portfolios=5000, risk_free_rate=0.01):
+def plot_efficient_frontier(processed_data, current_weights=None, allow_short=False, constraints=None, target_return=None):
     """
-    Plots the efficient frontier showing risk-return tradeoff of random portfolios.
-
+    Plot the efficient frontier with current, optimal, and minimum variance portfolios.
+    
     Args:
-        processed_data (dict): Dictionary of processed stock data.
-        num_portfolios (int, optional): Number of random portfolios to generate.
-            Defaults to 5000.
-        risk_free_rate (float, optional): Annual risk-free rate. Defaults to 0.01.
-
-    Raises:
-        ValueError: If unable to generate efficient frontier due to invalid data.
+        processed_data (dict): Dictionary of processed stock data
+        current_weights (dict, optional): Current portfolio weights
+        allow_short (bool): Whether to allow short selling
+        constraints (dict, optional): Dictionary with 'min' and 'max' allocation constraints
+        target_return (float, optional): Target return for optimal portfolio
     """
     logger = logging.getLogger('portfolio_analyzer')
     
     try:
-        logger.debug(f"Generating efficient frontier with {num_portfolios} portfolios")
-        price_data = pd.DataFrame()
-        for ticker, data in processed_data.items():
-            price_data[ticker] = data['Adj Close']
+        # Generate efficient frontier points
+        returns, volatilities, weights = generate_efficient_frontier(
+            processed_data, allow_short=allow_short, constraints=constraints
+        )
         
-        daily_returns = price_data.pct_change().dropna()
-        mean_returns = daily_returns.mean()
-        cov_matrix = daily_returns.cov()
-        num_assets = len(processed_data.keys())
+        # Plot efficient frontier
+        plt.figure(figsize=(12, 8))
+        plt.plot(volatilities, returns, 'b-', label='Efficient Frontier')
         
-        # Create lists instead of numpy arrays for collecting results
-        returns = []
-        volatilities = []
-        sharpe_ratios = []
+        # Plot current portfolio if provided
+        if current_weights is not None:
+            current_return, current_vol = calculate_portfolio_stats(
+                np.array(list(current_weights.values())),
+                processed_data
+            )
+            plt.plot(current_vol, current_return, 'r*', markersize=15, label='Current Portfolio')
         
-        for i in range(num_portfolios):
-            weights = np.random.random(num_assets)
-            weights /= np.sum(weights)
-            
-            portfolio_return = np.sum(mean_returns * weights) * 252
-            portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(cov_matrix * 252, weights)))
-            sharpe_ratio = (portfolio_return - risk_free_rate) / portfolio_volatility
-            
-            returns.append(portfolio_return)
-            volatilities.append(portfolio_volatility)
-            sharpe_ratios.append(sharpe_ratio)
+        # Find and plot minimum variance portfolio
+        min_var_weights, min_var_return, min_var_vol = optimize_portfolio(processed_data)
+        plt.plot(min_var_vol, min_var_return, 'g*', markersize=15, label='Minimum Variance')
         
-        # Convert to numpy arrays for plotting
-        returns = np.array(returns)
-        volatilities = np.array(volatilities)
-        sharpe_ratios = np.array(sharpe_ratios)
+        # Plot optimal portfolio if target return is provided
+        if target_return is not None:
+            optimal_weights, opt_return, opt_vol = optimize_portfolio(
+                processed_data, target_return=target_return, allow_short=allow_short
+            )
+            plt.plot(opt_vol, opt_return, 'y*', markersize=15, label='Optimal Portfolio')
         
-        plt.figure(figsize=(10, 7))
-        plt.scatter(volatilities, returns, c=sharpe_ratios, cmap='viridis', marker='o', s=10, alpha=0.3)
-        plt.colorbar(label='Sharpe Ratio')
-        plt.xlabel('Volatility (Std. Deviation)')
+        plt.xlabel('Expected Volatility')
         plt.ylabel('Expected Return')
         plt.title('Efficient Frontier')
+        plt.legend()
         plt.grid(True)
-        logger.debug("Efficient frontier plot generated successfully")
         plt.show()
+        
+        logger.debug("Efficient frontier plot generated successfully")
         
     except Exception as e:
         logger.error(f"Error generating efficient frontier plot: {str(e)}")

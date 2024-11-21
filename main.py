@@ -1,7 +1,12 @@
 # main.py
 from data_fetching import fetch_stock_data
 from data_processing import process_stock_data
-from calculations import calculate_portfolio_metrics, monte_carlo_simulation, calculate_portfolio_returns
+from calculations import (
+    calculate_portfolio_metrics,
+    monte_carlo_simulation,
+    calculate_portfolio_returns,
+    optimize_portfolio
+)
 from visualization import (
     plot_portfolio_performance,
     plot_efficient_frontier,
@@ -67,13 +72,36 @@ def main():
         logger.debug("Generating visualizations...")
         plot_portfolio_performance(portfolio_returns)
         plot_individual_assets(processed_data)
-        plot_efficient_frontier(processed_data)
+        plot_efficient_frontier(
+            processed_data, 
+            current_weights=portfolio,
+            allow_short=False,
+            target_return=metrics['Expected Return'] * 0.9
+        )
         plot_return_distribution(portfolio_returns)
 
         # Monte Carlo Simulation
         logger.debug("Running Monte Carlo simulation...")
         simulation_results = monte_carlo_simulation(processed_data, portfolio)
         plot_monte_carlo_results(simulation_results)
+        
+        # Hardcoded values (previously in values.txt)
+        target_return = metrics['Expected Return'] * 0.9  # 90% of current return
+        allow_short = False
+
+        # Calculate optimal portfolio
+        optimal_weights, opt_return, opt_vol = optimize_portfolio(
+            processed_data,
+            target_return=target_return,
+            allow_short=allow_short
+        )
+        
+        # Log optimization results
+        logger.info("\nOptimal Portfolio Results:")
+        for ticker, weight in zip(portfolio.keys(), optimal_weights):
+            logger.info(f"{ticker} weight: {weight:.4f}")
+        logger.info(f"Optimal Portfolio Return: {opt_return:.4f}")
+        logger.info(f"Optimal Portfolio Volatility: {opt_vol:.4f}")
         
         logger.info("Portfolio analysis completed successfully")
 

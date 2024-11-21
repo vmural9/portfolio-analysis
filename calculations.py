@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from data_fetching import fetch_stock_data
 import logging
+from scipy.optimize import minimize
 
 """
 Module for performing portfolio analysis calculations.
@@ -203,3 +204,148 @@ def calculate_portfolio_metrics(processed_data, portfolio_weights):
     metrics['VaR'] = calculate_var(portfolio_returns)
     
     return metrics
+
+def calculate_portfolio_stats(weights, processed_data):
+    """
+    Calculate portfolio statistics (return, volatility).
+    """
+    price_data = pd.DataFrame()
+    for ticker, data in processed_data.items():
+        price_data[ticker] = data['Adj Close']
+    
+    daily_returns = price_data.pct_change().dropna()
+    mean_returns = daily_returns.mean()
+    cov_matrix = daily_returns.cov()
+    
+    portfolio_return = np.sum(mean_returns * weights) * 252
+    portfolio_volatility = np.sqrt(np.dot(weights.T, np.dot(cov_matrix * 252, weights)))
+    return portfolio_return, portfolio_volatility
+
+def optimize_portfolio(processed_data, target_return=None, allow_short=False, constraints=None):
+    """
+    Optimize portfolio weights to minimize variance for a given target return.
+    
+    Args:
+        processed_data (dict): Dictionary of processed stock data
+        target_return (float, optional): Target annual return. If None, finds minimum variance portfolio
+        allow_short (bool): Whether to allow short selling
+        constraints (dict, optional): Dictionary with 'min' and 'max' allocation constraints per asset
+    
+    Returns:
+        tuple: (optimal weights, expected return, volatility)
+    """
+    # Prepare data
+    price_data = pd.DataFrame()
+    for ticker, data in processed_data.items():
+        price_data[ticker] = data['Adj Close']
+    
+    daily_returns = price_data.pct_change().dropna()
+    mean_returns = daily_returns.mean()
+    cov_matrix = daily_returns.cov()
+    num_assets = len(processed_data.keys())
+    
+    # Define constraints
+    bounds = (-1, 1) if allow_short else (0, 1)
+    if constraints:
+        bounds = [(constraints.get('min', 0), constraints.get('max', 1)) for _ in range(num_assets)]
+    else:
+        bounds = [bounds for _ in range(num_assets)]
+    
+    # Constraint: weights sum to 1
+    constraints_list = [{'type': 'eq', 'fun': lambda x: np.sum(x) - 1}]
+    
+    # Add target return constraint if specified
+    if target_return is not None:
+        constraints_list.append({
+            'type': 'eq',
+            'fun': lambda x: np.sum(mean_returns * x) * 252 - target_return
+        })
+    
+    # Objective function: minimize portfolio variance
+    def objective(weights):
+        return np.sqrt(np.dot(weights.T, np.dot(cov_matrix * 252, weights)))
+    
+    # Initial guess: equal weights
+    initial_weights = np.array([1/num_assets] * num_assets)
+    
+    # Optimize
+    result = minimize(objective, initial_weights,
+                     method='SLSQP',
+                     bounds=bounds,
+                     constraints=constraints_list)
+    
+    optimal_weights = result.x
+    return_value, volatility = calculate_portfolio_stats(optimal_weights, processed_data)
+    
+    return optimal_weights, return_value, volatility
+    
+    if not result.success:
+        raise ValueError(f"Optimization failed: {result.message}")
+    
+    optimal_weights = result.x
+    return_value, volatility = calculate_portfolio_stats(optimal_weights, mean_returns, cov_matrix)
+    
+    return optimal_weights, return_value, volatility
+
+def generate_efficient_frontier(processed_data, num_points=100, allow_short=False, constraints=None):
+    """
+    Generate efficient frontier points.
+    
+    Returns:
+        tuple: (returns, volatilities, weights_list)
+    """
+    # Get minimum variance portfolio
+    min_weights, min_ret, min_vol = optimize_portfolio(processed_data, allow_short=allow_short, constraints=constraints)
+    
+    # Get maximum return portfolio (by optimizing for return instead of variance)
+    price_data = pd.DataFrame()
+    for ticker, data in processed_data.items():
+        price_data[ticker] = data['Adj Close']
+    
+    daily_returns = price_data.pct_change().dropna()
+    mean_returns = daily_returns.mean()
+    
+    # Find portfolio with maximum return
+    num_assets = len(processed_data.keys())
+    bounds = (-1, 1) if allow_short else (0, 1)
+    if constraints:
+        bounds = [(constraints.get('min', 0), constraints.get('max', 1)) for _ in range(num_assets)]
+    else:
+        bounds = [bounds for _ in range(num_assets)]
+    
+    # For maximum return, we'll maximize the negative of return (since minimize is our only option)
+    def objective(weights):
+        return -np.sum(mean_returns * weights) * 252
+    
+    constraints_list = [{'type': 'eq', 'fun': lambda x: np.sum(x) - 1}]
+    
+    result = minimize(objective, 
+                     np.array([1/num_assets] * num_assets),
+                     method='SLSQP',
+                     bounds=bounds,
+                     constraints=constraints_list)
+    
+    max_weights = result.x
+    max_ret, max_vol = calculate_portfolio_stats(max_weights, processed_data)
+    
+    # Generate points between minimum variance and maximum return
+    target_returns = np.linspace(min_ret, max_ret, num_points)
+    efficient_portfolios = []
+    
+    for target in target_returns:
+        try:
+            weights, ret, vol = optimize_portfolio(
+                processed_data, 
+                target_return=target,
+                allow_short=allow_short,
+                constraints=constraints
+            )
+            efficient_portfolios.append((ret, vol, weights))
+        except:
+            continue
+    
+    returns = [p[0] for p in efficient_portfolios]
+    volatilities = [p[1] for p in efficient_portfolios]
+    weights_list = [p[2] for p in efficient_portfolios]
+    
+    return returns, volatilities, weights_list
