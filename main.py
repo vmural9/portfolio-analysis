@@ -9,36 +9,77 @@ from visualization import (
     plot_monte_carlo_results,
     plot_return_distribution
 )
+from logger_config import setup_logger
+
+"""
+Main module for portfolio analysis application.
+
+This module orchestrates the portfolio analysis process by combining
+data fetching, processing, calculations, and visualization components.
+It serves as the entry point for the application.
+"""
 
 def main():
-    # User inputs
-    portfolio = {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
-    start_date = '2020-01-01'
-    end_date = '2023-10-01'
+    """
+    Main function to run the portfolio analysis.
 
-    # Fetch data
-    raw_data = fetch_stock_data(list(portfolio.keys()), start_date, end_date)
+    The function performs the following steps:
+    1. Fetches historical stock data
+    2. Processes and cleans the data
+    3. Calculates portfolio metrics
+    4. Generates visualizations
+    5. Runs Monte Carlo simulations
 
-    # Process data
-    processed_data = process_stock_data(raw_data)
-    # print(processed_data)
+    Raises:
+        Exception: If any step in the analysis process fails.
+    """
+    # Setup logger
+    logger = setup_logger()
+    logger.info("Starting portfolio analysis")
 
-    # Calculate metrics
-    metrics = calculate_portfolio_metrics(processed_data, portfolio)
-    portfolio_returns = calculate_portfolio_returns(processed_data, portfolio)
-    print("Portfolio Metrics:")
-    for key, value in metrics.items():
-        print(f"{key}: {value}")
+    try:
+        # User inputs
+        portfolio = {'AAPL': 0.4, 'MSFT': 0.3, 'GOOGL': 0.3}
+        start_date = '2020-01-01'
+        end_date = '2023-10-01'
+        
+        logger.info(f"Analyzing portfolio: {portfolio}")
+        logger.info(f"Time period: {start_date} to {end_date}")
 
-    # Visualizations
-    plot_portfolio_performance(portfolio_returns)
-    plot_individual_assets(processed_data)
-    plot_efficient_frontier(processed_data)
-    plot_return_distribution(portfolio_returns)
+        # Fetch data
+        logger.debug("Fetching stock data...")
+        raw_data = fetch_stock_data(list(portfolio.keys()), start_date, end_date)
 
-    # Monte Carlo Simulation
-    simulation_results = monte_carlo_simulation(processed_data, portfolio)
-    plot_monte_carlo_results(simulation_results)
+        # Process data
+        logger.debug("Processing stock data...")
+        processed_data = process_stock_data(raw_data)
+
+        # Calculate metrics
+        logger.debug("Calculating portfolio metrics...")
+        metrics = calculate_portfolio_metrics(processed_data, portfolio)
+        portfolio_returns = calculate_portfolio_returns(processed_data, portfolio)
+        
+        logger.info("Portfolio Metrics:")
+        for key, value in metrics.items():
+            logger.info(f"{key}: {value:.4f}")
+
+        # Visualizations
+        logger.debug("Generating visualizations...")
+        plot_portfolio_performance(portfolio_returns)
+        plot_individual_assets(processed_data)
+        plot_efficient_frontier(processed_data)
+        plot_return_distribution(portfolio_returns)
+
+        # Monte Carlo Simulation
+        logger.debug("Running Monte Carlo simulation...")
+        simulation_results = monte_carlo_simulation(processed_data, portfolio)
+        plot_monte_carlo_results(simulation_results)
+        
+        logger.info("Portfolio analysis completed successfully")
+
+    except Exception as e:
+        logger.error(f"An error occurred during portfolio analysis: {str(e)}", exc_info=True)
+        raise
 
 if __name__ == '__main__':
     main()
